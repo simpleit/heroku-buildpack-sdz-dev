@@ -11,6 +11,7 @@ PHP_VERSION=5.3.9
 S3_BUCKET=simpleit-heroku-builds
 # END CONFIG
 
+
 #
 NGINX_URL="https://${S3_BUCKET}.s3.amazonaws.com/nginx-${NGINX_VERSION}-heroku.tar.gz"
 PHP_URL="https://${S3_BUCKET}.s3.amazonaws.com/php-${PHP_VERSION}-with-fpm-heroku.tar.gz"
@@ -26,6 +27,9 @@ function indent() {
 
 BUILD_DIR=$1
 CACHE_DIR=$2
+BIN_DIR=$(dirname $0)
+LP_DIR=`cd $(dirname $0); cd ..; pwd`
+
 mkdir -p $BUILD_DIR $CACHE_DIR
 
 # Nginx
@@ -48,8 +52,9 @@ fi
 
 
 # update config files
-#cp $LP_DIR/conf/httpd.conf $APACHE_PATH/conf
-#cp $LP_DIR/conf/php.ini php
+cp $LP_DIR/conf/php-fmp.conf /app/vendor/php/etc/php-fmp.conf
+cp $LP_DIR/conf/php.ini /app/vendor/php/php.ini
+erb $LP_DIR/conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
 
 # setup web script. php-cgi relies on PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=1000, set in 'bin/release'
 echo "-----> Installing boot script"
@@ -59,10 +64,10 @@ cat >>boot.sh <<EOF
 
 echo "Booting nginx"
 
-cp /app/config/php-fpm.conf /app/vendor/php/etc/php-fpm.conf
+#cp /app/config/php-fpm.conf /app/vendor/php/etc/php-fpm.conf
 cp /app/vendor/php/share/php/fpm/status.html /app/status.html
-cp /app/config/php.ini /app/vendor/php/php.ini
-erb /app/config/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
+#cp /app/config/php.ini /app/vendor/php/php.ini
+#erb /app/config/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
 
 touch /app/vendor/nginx/logs/access.log /app/vendor/nginx/logs/error.log
 mkdir -p client_body_temp fastcgi_temp proxy_temp scgi_temp uwsgi_temp
