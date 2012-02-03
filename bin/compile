@@ -52,9 +52,9 @@ fi
 
 
 # update config files
-cp $LP_DIR/conf/php-fmp.conf /app/vendor/php/etc/php-fmp.conf
-cp $LP_DIR/conf/php.ini /app/vendor/php/php.ini
-erb $LP_DIR/conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
+cp $LP_DIR/conf/php-fmp.conf ${BUILD_DIR}/vendor/php/etc/php-fmp.conf
+cp $LP_DIR/conf/php.ini ${BUILD_DIR}/vendor/php/php.ini
+erb $LP_DIR/conf/nginx.conf.erb > ${BUILD_DIR}/vendor/nginx/conf/nginx.conf
 
 # setup web script. php-cgi relies on PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=1000, set in 'bin/release'
 echo "-----> Installing boot script"
