@@ -118,10 +118,12 @@ erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 echo "-----> Installing boot script"
 cd $BUILD_DIR
 
-mkdir -p bin
-ln -s /app/${PHP_PATH}/bin/php bin/php
-ln -s /app/${PHP_PATH}/sbin/php-fpm bin/php-fpm
-ln -s /app/${NGINX_PATH}/sbin/nginx bin/nginx
+#mkdir -p bin
+#ln -s /app/${PHP_PATH}/bin/php bin/php
+#ln -s /app/${PHP_PATH}/sbin/php-fpm bin/php-fpm
+#ln -s /app/${NGINX_PATH}/sbin/nginx bin/nginx
+
+export PATH=/app/vendor/nginx/sbin:/app/vendor/php/bin:/app/vendor/php/sbin:/usr/local/bin:/usr/bin:/bin:$PATH
 
 cat >>boot.sh <<EOF
 #!/usr/bin/env bash
