@@ -144,6 +144,8 @@ if [ -d /tmp/sf-cache ]; then
 fi
 ln -s /tmp/sf-cache /app/www/app/cache
 
+cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
+
 touch /app/www/app/logs/prod.log
 (tail -f -n 0 /app/www/app/logs/*.log &)
 
