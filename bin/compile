@@ -131,6 +131,10 @@ export PATH=/app/vendor/nginx/sbin:/app/vendor/php/bin:/app/vendor/php/sbin:/usr
 
 echo "Booting nginx"
 
+echo "Copy parameters.ini file into Sf2 app config folder"
+cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
+
+echo "Copy PHP & Nginx conf files into vendors directory"
 cp /app/conf/php-fpm.conf /app/vendor/php/etc/php-fpm.conf
 cp /app/vendor/php/share/php/fpm/status.html /app/status.html
 cp /app/conf/php.ini /app/vendor/php/php.ini
@@ -145,7 +149,6 @@ fi
 mkdir /tmp/sf-cache
 ln -s /tmp/sf-cache /app/www/app/cache
 
-cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
 
 touch /app/www/app/logs/prod.log
 (tail -f -n 0 /app/www/app/logs/*.log &)
