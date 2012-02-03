@@ -114,6 +114,8 @@ cp conf/php-fpm.conf $PHP_PATH/etc/php-fmp.conf
 cp conf/php.ini $PHP_PATH/php.ini
 erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 
+cp conf/parameters.ini www/app/config/parameters.ini
+
 # setup web script. php-cgi relies on PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=1000, set in 'bin/release'
 echo "-----> Installing boot script"
 cd $BUILD_DIR
