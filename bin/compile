@@ -47,6 +47,18 @@ cd $BUILD_DIR
 mkdir -p $CACHE_DIR/www
 mv * $CACHE_DIR/www
 mv $CACHE_DIR/www .
+mv www/conf ./
+
+
+# keep Procfile
+if [ -f www/Procfile ]; then
+  mv www/Procfile .
+fi
+
+# unpack cache
+if [ ! -d vendor ]; then
+  mkdir vendor
+fi
 
 echo "-> LISTFILES"
 echo "-> Builddir:"
@@ -59,18 +71,23 @@ ls -la ./www
 echo "-> Cachedir:"
 ls -la $CACHE_DIR
 
-# keep Procfile
-if [ -f www/Procfile ]; then
-  mv www/Procfile .
-fi
-
-# unpack cache
 for DIR in $NGINX_PATH $PHP_PATH ; do
   rm -rf $DIR
   if [ -d $CACHE_DIR/$DIR ]; then
     cp -r $CACHE_DIR/$DIR $DIR
   fi  
 done
+
+echo "-> LISTFILES"
+echo "-> Builddir:"
+ls -la .
+
+echo "-> Builddir/www:"
+ls -la ./www
+
+
+echo "-> Cachedir:"
+ls -la $CACHE_DIR
 
 # Nginx
 
@@ -95,9 +112,9 @@ cd $BUILD_DIR
 
 
 # update config files
-cp $CACHE_DIR/conf/php-fmp.conf $PHP_PATH/etc/php-fmp.conf
-cp $CACHE_DIR/conf/php.ini $PHP_PATH/php.ini
-erb $CACHE_DIR/conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
+cp conf/php-fmp.conf $PHP_PATH/etc/php-fmp.conf
+cp conf/php.ini $PHP_PATH/php.ini
+erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 
 # setup web script. php-cgi relies on PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=1000, set in 'bin/release'
 echo "-----> Installing boot script"
