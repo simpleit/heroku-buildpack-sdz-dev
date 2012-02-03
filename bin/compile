@@ -60,26 +60,26 @@ if [ ! -d vendor ]; then
   mkdir vendor
 fi
 
-echo "-> LISTFILES"
-echo "-> Builddir:"
-ls -lR .
+#echo "-> LISTFILES"
+#echo "-> Builddir:"
+#ls -lR .
 
-echo "-> Cachedir:"
-ls -lR $CACHE_DIR
+#echo "-> Cachedir:"
+#ls -lR $CACHE_DIR
 
-for DIR in $NGINX_PATH $PHP_PATH ; do
-  rm -rf $DIR
-  if [ -d $CACHE_DIR/$DIR ]; then
-    cp -r $CACHE_DIR/$DIR $DIR
-  fi  
-done
+#for DIR in $NGINX_PATH $PHP_PATH ; do
+#  rm -rf $DIR
+#  if [ -d $CACHE_DIR/$DIR ]; then
+#    cp -r $CACHE_DIR/$DIR $DIR
+#  fi  
+#done
 
-echo "-> LISTFILES"
-echo "-> Builddir:"
-ls -lR .
-
-echo "-> Cachedir:"
-ls -lR $CACHE_DIR
+#echo "-> LISTFILES"
+#echo "-> Builddir:"
+#ls -lR .
+#
+#echo "-> Cachedir:"
+#ls -lR $CACHE_DIR
 
 # Nginx
 
@@ -102,15 +102,15 @@ fi
 
 cd $BUILD_DIR
 
-echo "-> LISTFILES"
-echo "-> Builddir:"
-ls -lR .
+#echo "-> LISTFILES"
+#echo "-> Builddir:"
+#ls -lR .
 
-echo "-> Cachedir:"
-ls -lR $CACHE_DIR
+#echo "-> Cachedir:"
+#ls -lR $CACHE_DIR
 
 # update config files
-cp conf/php-fmp.conf $PHP_PATH/etc/php-fmp.conf
+cp conf/php-fpm.conf $PHP_PATH/etc/php-fmp.conf
 cp conf/php.ini $PHP_PATH/php.ini
 erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 
