@@ -17,6 +17,10 @@ NGINX_URL="https://${S3_BUCKET}.s3.amazonaws.com/nginx-${NGINX_VERSION}-heroku.t
 PHP_URL="https://${S3_BUCKET}.s3.amazonaws.com/php-${PHP_VERSION}-with-fpm-heroku.tar.gz"
 #
 
+NGINX_PATH="vendor/nginx"
+PHP_PATH="vendor/php"
+
+
 function indent() {
   c='s/^/       /'
   case $(uname) in
@@ -37,29 +41,52 @@ echo "LP_DIR: $LP_DIR"
 
 mkdir -p $BUILD_DIR $CACHE_DIR
 
+cd $BUILD_DIR
+
+# move app things to www
+mkdir -p $CACHE_DIR/www
+mv * $CACHE_DIR/www
+mv $CACHE_DIR/www .
+
+# keep Procfile
+if [ -f www/Procfile ]; then
+  mv www/Procfile .
+fi
+
+# unpack cache
+for DIR in $NGINX_PATH $PHP_PATH ; do
+  rm -rf $DIR
+  if [ -d $CACHE_DIR/$DIR ]; then
+    cp -r $CACHE_DIR/$DIR $DIR
+  fi  
+done
+
 # Nginx
+
 echo "-----> Installing Nginx"
 cd ${BUILD_DIR}
-if [ ! -d ./vendor/nginx ]; then
+if [ ! -d $NGINX_PATH ]; then
   echo "-----> Bundling Nginx v${NGINX_VERSION}"
-  mkdir -p ./vendor/nginx && cd ./vendor/nginx
+  mkdir -p $NGINX_PATH && cd $NGINX_PATH
   curl --silent --max-time 60 --location $NGINX_URL | tar xz
 fi
 
 # PHP
 echo "-----> Installing PHP"
 cd ${BUILD_DIR}
-if [ ! -d ./vendor/php ]; then
+if [ ! -d $PHP_PATH ]; then
   echo "-----> Bundling PHP v${PHP_VERSION}"
-  mkdir -p ./vendor/php && cd ./vendor/php
+  mkdir -p $PHP_PATH && cd $PHP_PATH
   curl --silent --max-time 60 --location $PHP_URL | tar xz
 fi
 
+cd $BUILD_DIR
+
 
 # update config files
-cp $LP_DIR/conf/php-fmp.conf ${BUILD_DIR}/vendor/php/etc/php-fmp.conf
-cp $LP_DIR/conf/php.ini ${BUILD_DIR}/vendor/php/php.ini
-erb $LP_DIR/conf/nginx.conf.erb > ${BUILD_DIR}/vendor/nginx/conf/nginx.conf
+cp $LP_DIR/conf/php-fmp.conf $PHP_PATH/etc/php-fmp.conf
+cp $LP_DIR/conf/php.ini $PHP_PATH/php.ini
+erb $LP_DIR/conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 
 # setup web script. php-cgi relies on PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=1000, set in 'bin/release'
 echo "-----> Installing boot script"
