@@ -62,14 +62,10 @@ fi
 
 echo "-> LISTFILES"
 echo "-> Builddir:"
-ls -la .
-
-echo "-> Builddir/www:"
-ls -la ./www
-
+ls -lR .
 
 echo "-> Cachedir:"
-ls -la $CACHE_DIR
+ls -lR $CACHE_DIR
 
 for DIR in $NGINX_PATH $PHP_PATH ; do
   rm -rf $DIR
@@ -80,14 +76,10 @@ done
 
 echo "-> LISTFILES"
 echo "-> Builddir:"
-ls -la .
-
-echo "-> Builddir/www:"
-ls -la ./www
-
+ls -lR .
 
 echo "-> Cachedir:"
-ls -la $CACHE_DIR
+ls -lR $CACHE_DIR
 
 # Nginx
 
@@ -110,6 +102,12 @@ fi
 
 cd $BUILD_DIR
 
+echo "-> LISTFILES"
+echo "-> Builddir:"
+ls -lR .
+
+echo "-> Cachedir:"
+ls -lR $CACHE_DIR
 
 # update config files
 cp conf/php-fmp.conf $PHP_PATH/etc/php-fmp.conf
