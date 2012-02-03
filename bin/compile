@@ -49,7 +49,15 @@ mv * $CACHE_DIR/www
 mv $CACHE_DIR/www .
 
 echo "-> LISTFILES"
-ls -l .
+echo "-> Builddir:"
+ls -la .
+
+echo "-> Builddir/www:"
+ls -la ./www
+
+
+echo "-> Cachedir:"
+ls -la $CACHE_DIR
 
 # keep Procfile
 if [ -f www/Procfile ]; then
