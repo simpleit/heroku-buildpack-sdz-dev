@@ -97,7 +97,7 @@ cd ${BUILD_DIR}
 if [ ! -d $PHP_PATH ]; then
   echo "-----> Bundling PHP v${PHP_VERSION}"
   mkdir -p $PHP_PATH && cd $PHP_PATH
-  curl --silent --max-time 60 --location $PHP_URL | tar xz
+  curl --silent --max-time 300 --location $PHP_URL | tar xz
 fi
 
 cd $BUILD_DIR
