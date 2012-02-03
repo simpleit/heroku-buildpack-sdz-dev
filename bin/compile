@@ -164,4 +164,9 @@ nginx
 EOF
 chmod +x boot.sh
 
+cd $BUILD_DIR
+
+echo "-----> Install Sf2 vendors"
+${PHP_PATH}/bin/php www/bin/vendors install
+
 echo "-----> Done with compile"
