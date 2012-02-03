@@ -117,6 +117,12 @@ erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 # setup web script. php-cgi relies on PHP_FCGI_CHILDREN=5 PHP_FCGI_MAX_REQUESTS=1000, set in 'bin/release'
 echo "-----> Installing boot script"
 cd $BUILD_DIR
+
+mkdir -p bin
+ln -s /app/${PHP_PATH}/bin/php bin/php
+ln -s /app/${PHP_PATH}/sbin/php-fpm bin/php-fpm
+ln -s /app/${NGINX_PATH}/sbin/nginx bin/nginx
+
 cat >>boot.sh <<EOF
 #!/usr/bin/env bash
 
