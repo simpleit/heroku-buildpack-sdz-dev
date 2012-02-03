@@ -131,8 +131,6 @@ cat >>boot.sh <<EOF
 
 export PATH=/app/vendor/nginx/sbin:/app/vendor/php/bin:/app/vendor/php/sbin:/usr/local/bin:/usr/bin:/bin:$PATH
 
-echo "Booting nginx"
-
 echo "Copy parameters.ini file into Sf2 app config folder"
 cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
 
@@ -142,6 +140,7 @@ cp /app/vendor/php/share/php/fpm/status.html /app/status.html
 cp /app/conf/php.ini /app/vendor/php/php.ini
 erb /app/conf/nginx.conf.erb > /app/vendor/nginx/conf/nginx.conf
 
+echo "Linking Sf2 cache dir to /tmp folder"
 if [ -d /app/www/app/cache ]; then
     rm -rf /app/www/app/cache
 fi
@@ -151,14 +150,18 @@ fi
 mkdir /tmp/sf-cache
 ln -s /tmp/sf-cache /app/www/app/cache
 
+echo "Enabled Sf2 logging system"
+touch /app/www/app/logs/prod.log /app/www/app/logs/dev.log
+tail -F -n 0 /app/www/app/logs/prod.log &
+tail -F -n 0 /app/www/app/logs/dev.log &
 
-touch /app/www/app/logs/prod.log
-(tail -f -n 0 /app/www/app/logs/*.log &)
-
+echo "Enabled Nginx logging system"
 touch /app/vendor/nginx/logs/access.log /app/vendor/nginx/logs/error.log
 mkdir -p client_body_temp fastcgi_temp proxy_temp scgi_temp uwsgi_temp
-(tail -f -n 0 /app/vendor/nginx/logs/*.log &)
+tail -F -n 0 /app/vendor/nginx/logs/access.log &
+tail -F -n 0 /app/vendor/nginx/logs/error.log &
 
+echo "Booting PHP-FPM & Nginx"
 php-fpm
 nginx
 EOF
