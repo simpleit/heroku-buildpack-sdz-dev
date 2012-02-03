@@ -169,4 +169,6 @@ cd $BUILD_DIR
 echo "-----> Install Sf2 vendors"
 ${PHP_PATH}/bin/php www/bin/vendors install
 
+find www/vendor -name .git -type d | xargs rm -rf
+
 echo "-----> Done with compile"
