@@ -142,6 +142,7 @@ fi
 if [ -d /tmp/sf-cache ]; then
     rm -rf /tmp/sf-cache
 fi
+mkdir /tmp/sf-cache
 ln -s /tmp/sf-cache /app/www/app/cache
 
 cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
