@@ -123,10 +123,11 @@ cd $BUILD_DIR
 #ln -s /app/${PHP_PATH}/sbin/php-fpm bin/php-fpm
 #ln -s /app/${NGINX_PATH}/sbin/nginx bin/nginx
 
-export PATH=/app/vendor/nginx/sbin:/app/vendor/php/bin:/app/vendor/php/sbin:/usr/local/bin:/usr/bin:/bin:$PATH
 
 cat >>boot.sh <<EOF
 #!/usr/bin/env bash
+
+export PATH=/app/vendor/nginx/sbin:/app/vendor/php/bin:/app/vendor/php/sbin:/usr/local/bin:/usr/bin:/bin:$PATH
 
 echo "Booting nginx"
 
