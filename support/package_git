@@ -34,7 +34,7 @@ old_pwd="$(pwd)"
 basedir="$( cd -P "$( dirname "$0" )" && pwd )"
 
 # make a temp directory
-tempdir="$( mktemp -t php_XXXX )"
+tempdir="$( mktemp -t git_XXXX )"
 
 echo "Temp Dir : $tempdir"
 
