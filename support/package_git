@@ -1,0 +1,65 @@
+#!/bin/bash
+
+set -e
+
+AUTOCONF_VERSION=2.59
+
+GIT_VERSION="1.7.9"
+GIT_REPOSITORY="https://github.com/gitster/git.git"
+
+# node_version="$1"
+
+# if [ "$node_version" == "" ]; then
+#   echo "usage: $0 VERSION"
+#   exit 1
+# fi
+
+#if [ "$AWS_ID" == "" ]; then
+#  echo "must set AWS_ID"
+#  exit 1
+#fi
+
+#if [ "$AWS_SECRET" == "" ]; then
+#  echo "must set AWS_SECRET"
+#  exit 1
+#fi
+
+#if [ "$S3_BUCKET" == "" ]; then
+#  echo "must set S3_BUCKET"
+#  exit 1
+#fi
+
+old_pwd="$(pwd)"
+
+basedir="$( cd -P "$( dirname "$0" )" && pwd )"
+
+# make a temp directory
+tempdir="$( mktemp -t php_XXXX )"
+
+echo "Temp Dir : $tempdir"
+
+rm -rf $tempdir
+mkdir -p $tempdir
+cd $tempdir
+
+echo "Cloning Git ${GIT_VERSION}..."
+git clone ${GIT_REPOSITORY} git-${GIT_VERSION}
+cd git-${GIT_VERSION}
+git checkout ${GIT_TAG}
+
+echo "Make configure script..."
+export PHP_AUTOCONF="autoconf${AUTOCONF_VERSION}"
+make configure
+
+cd ..
+
+echo "Use vulcan to build Git for Heroku instance..."
+vulcan build -v -s git-${GIT_VERSION} -o $tempdir/git-${GIT_VERSION}-heroku.tar.gz -p /app/vendor/git -c './configure --prefix=/app/vendor/git && make all && make install'
+
+# upload to s3
+#$basedir/aws/s3 put $S3_BUCKET php-5.3.9-with-fpm-heroku.tar.gz $tempdir/php-5.3.9-with-fpm-heroku.tar.gz
+
+echo "Copy tarball to current directory..."
+cp $tempdir/git-${GIT_VERSION}-heroku.tar.gz $old_pwd/
+
+cd $old_pwd
