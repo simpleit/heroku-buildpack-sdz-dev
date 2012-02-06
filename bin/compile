@@ -179,4 +179,8 @@ cd $BUILD_DIR
 #
 #find www/vendor -name .git -type d | xargs rm -rf
 
+echo "-----> Install Sf2 assets"
+${PHP_PATH}/bin/php www/app/console assets:install web
+
+
 echo "-----> Done with compile"
