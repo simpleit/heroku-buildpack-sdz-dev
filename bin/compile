@@ -115,6 +115,7 @@ if [ ! -d $NGINX_PATH ]; then
   curl --silent --max-time 60 --location $NGINX_URL | tar xz
 fi
 echo "---------> Moving conf files to vendor directory"
+cd ${BUILD_DIR}
 erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 
 # ----PHP--------------------------------
@@ -126,6 +127,7 @@ if [ ! -d $PHP_PATH ]; then
   curl --silent --max-time 300 --location $PHP_URL | tar xz
 fi
 echo "---------> Moving conf files to vendor directory"
+cd ${BUILD_DIR}
 cp conf/php-fpm.conf $PHP_PATH/etc/php-fmp.conf
 cp conf/php.ini $PHP_PATH/php.ini
 
