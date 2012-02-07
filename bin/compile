@@ -59,7 +59,8 @@ mktmpdir() {
 
 run_npm() {
   command="$1"
-  HOME="$BUILD_DIR" $BUILD_DIR/$NODE_PATH/bin/npm $command 2>&1 | indent
+  module="$2"
+  HOME="$BUILD_DIR" $BUILD_DIR/$NODE_PATH/bin/npm $command $module 2>&1 | indent
 
   if [ "${PIPESTATUS[*]}" != "0 0" ]; then
     echo " !     Failed to $command dependencies with npm"
@@ -187,8 +188,8 @@ if [ ! -d $NODE_PATH ]; then
   echo "---------> Installing dependencies with npm $NPM_VERSION"
   
   cd $BUILD_DIR
-  run_npm install
-  run_npm rebuild
+  run_npm install less
+  run_npm rebuild less
   
   echo "---------> Dependencies installed" | indent
   
