@@ -31,7 +31,7 @@ NODE_PATH="vendor/node"
 NPM_VERSION="1.0.94"
 
 SCONS_VERSION="1.2.0"
-SCORN_URL="https://${S3_BUCKET}.s3.amazonaws.com/scons-${SCONS_VERSION}-heroku.tar.gz"
+SCONS_URL="https://${S3_BUCKET}.s3.amazonaws.com/scons-${SCONS_VERSION}-heroku.tar.gz"
 
 # ----Local folders----
 BUILD_DIR=$1
@@ -143,7 +143,7 @@ if [ ! -d $NODE_PATH ]; then
   
   VENDORED_SCONS="$(mktmpdir scons)"
   cd $VENDORED_SCONS
-  curl --silent --max-time 90 --location $VENDORED_SCONS | tar xz
+  curl --silent --max-time 90 --location $SCONS_URL | tar xz
 
   PATH="$VENDORED_SCONS:${BUILD_DIR}/$NODE_PATH/bin:$PATH"
   INCLUDE_PATH="${BUILD_DIR}/$NODE_PATH/include"
