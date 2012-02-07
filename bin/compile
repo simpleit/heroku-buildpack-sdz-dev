@@ -234,6 +234,9 @@ export PATH=/app/vendor/node/bin:/app/node_modules/.bin:/app/vendor/nginx/sbin:/
 
 echo "---- SdZ Heroku boot Script ----"
 
+echo "---- Prepare PHP env----"
+export LD_LIBRARY_PATH=/app/vendor/php/icu/lib
+
 echo "--> Copy parameters.ini file into Sf2 app config folder"
 cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
 
