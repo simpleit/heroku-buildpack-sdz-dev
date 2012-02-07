@@ -13,6 +13,9 @@
 
 # ----START CONFIG-----------------------------------------------------
 
+# ----Amazon S3----
+S3_BUCKET="simpleit-heroku-builds"
+
 # ----Heroku Packages----
 NGINX_VERSION=1.0.11
 NGINX_URL="https://${S3_BUCKET}.s3.amazonaws.com/nginx-${NGINX_VERSION}-heroku.tar.gz"
@@ -23,14 +26,12 @@ PHP_URL="https://${S3_BUCKET}.s3.amazonaws.com/php-${PHP_VERSION}-with-fpm-herok
 PHP_PATH="vendor/php"
 
 NODE_VERSION="0.6.10"
-NODE_URL=""
+NODE_URL="https://${S3_BUCKET}.s3.amazonaws.com/node-${NODE_VERSION}-heroku.tar.gz"
+NODE_PATH="vendor/node"
 NPM_VERSION="1.0.94"
 
 SCONS_VERSION="1.2.0"
-SCORN_URL=""
-
-# ----Amazon S3----
-S3_BUCKET="simpleit-heroku-builds"
+SCORN_URL="https://${S3_BUCKET}.s3.amazonaws.com/scons-${SCONS_VERSION}-heroku.tar.gz"
 
 # ----Local folders----
 BUILD_DIR=$1
@@ -49,9 +50,16 @@ function indent() {
   esac
 }
 
+mktmpdir() {
+  dir=$(mktemp -t $1-XXXX)
+  rm -rf $dir
+  mkdir -p $dir
+  echo $dir
+}
+
 run_npm() {
   command="$1"
-  HOME="$BUILD_DIR" $VENDORED_NODE/bin/node $VENDORED_NPM/cli.js $command 2>&1 | indent
+  HOME="$BUILD_DIR" $BUILD_DIR/$NODE_PATH/bin/npm $command 2>&1 | indent
 
   if [ "${PIPESTATUS[*]}" != "0 0" ]; then
     echo " !     Failed to $command dependencies with npm"
@@ -99,8 +107,6 @@ fi
 
 # ----INSTALL SERVICES-----------------------------------------------------
 # ----Nginx------------------------------
-cd $BUILD_DIR
-
 echo "-----> Installing Nginx"
 cd ${BUILD_DIR}
 if [ ! -d $NGINX_PATH ]; then
@@ -112,8 +118,6 @@ echo "---------> Moving conf files to vendor directory"
 erb conf/nginx.conf.erb > $NGINX_PATH/conf/nginx.conf
 
 # ----PHP--------------------------------
-cd $BUILD_DIR
-
 echo "-----> Installing PHP"
 cd ${BUILD_DIR}
 if [ ! -d $PHP_PATH ]; then
@@ -124,6 +128,66 @@ fi
 echo "---------> Moving conf files to vendor directory"
 cp conf/php-fpm.conf $PHP_PATH/etc/php-fmp.conf
 cp conf/php.ini $PHP_PATH/php.ini
+
+# ----Node--------------------------------
+echo "-----> Installing Node"
+cd ${BUILD_DIR}
+
+if [ ! -d $NODE_PATH ]; then
+  echo "---------> Bundling Node v${NODE_VERSION}"
+  mkdir -p $NODE_PATH && cd $NODE_PATH
+  curl --silent --max-time 90 --location $NODE_URL | tar xz
+  cd ..
+  
+  VENDORED_SCONS="$(mktmpdir scons)"
+  cd $VENDORED_SCONS
+  curl --silent --max-time 90 --location $VENDORED_SCONS | tar xz
+
+  PATH="$VENDORED_SCONS:${BUILD_DIR}/$NODE_PATH/bin:$PATH"
+  INCLUDE_PATH="${BUILD_DIR}/$NODE_PATH/include"
+  export CPATH="$INCLUDE_PATH"
+  export CPPPATH="$INCLUDE_PATH"
+
+  CACHE_STORE_DIR="$CACHE_DIR/node_modules/$NPM_VERSION"
+  CACHE_TARGET_DIR="$BUILD_DIR/node_modules"
+
+  # unpack existing cache
+  if [ -d $CACHE_STORE_DIR ]; then
+  
+    # generate a place to put node_modules
+    TEMP_NODE_MODULES_DIR=$(mktmpdir node_modules)
+  
+    # move existing node_modules out of the way
+    if [ -d $CACHE_TARGET_DIR ]; then
+      mv $CACHE_TARGET_DIR $TEMP_NODE_MODULES_DIR/
+    fi  
+  
+    # copy the cached node_modules in
+    mkdir -p $CACHE_TARGET_DIR
+    cp -R $CACHE_STORE_DIR/* $CACHE_TARGET_DIR/
+  
+    # move existing node_modules back into place
+    if [ -d $TEMP_NODE_MODULES_DIR/node_modules ]; then
+      cp -R $TEMP_NODE_MODULES_DIR/node_modules/* $CACHE_TARGET_DIR/
+    fi
+  fi
+
+  # install dependencies with npm
+  echo "---------> Installing dependencies with npm $NPM_VERSION"
+  
+  cd $BUILD_DIR
+  run_npm install
+  run_npm rebuild
+  
+  echo "---------> Dependencies installed" | indent
+  
+  # repack cache with new assets
+  if [ -d $CACHE_TARGET_DIR ]; then
+    rm -rf $CACHE_STORE_DIR
+    mkdir -p $(dirname $CACHE_STORE_DIR)
+    cp -a $CACHE_TARGET_DIR $CACHE_STORE_DIR
+  fi
+fi
 
 # ----END INSTALL SERVICES-------------------------------------------------
 
