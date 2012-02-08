@@ -222,6 +222,7 @@ echo "---------> Install Sf2 assets"
 ###FIXME### Change 'dev' environement to 'prod'
 export LD_LIBRARY_PATH=${BUILD_DIR}/${PHP_PATH}/icu/lib
 ${PHP_PATH}/bin/php www/app/console assets:install www/web --env=dev
+${PHP_PATH}/bin/php www/app/console assetic:dump --no-debug --env=dev
 
 
 # ----BOOT SCRIPT----------------------------------------------------------
