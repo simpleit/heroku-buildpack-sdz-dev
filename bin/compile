@@ -214,7 +214,20 @@ cd $BUILD_DIR
 echo "-----> Installing Sf2 application"
 
 echo "---------> Moving app conf files to Sf2 configuration directory"
-cp conf/parameters.ini www/app/config/parameters.ini
+HEROKU_PG_URI=$HEROKU_SHARED_POSTGRESQL_MAROON_URL
+
+[[ $HEROKU_PG_URI =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
+HEROKU_PG_USER="${BASH_REMATCH[1]}"
+HEROKU_PG_PASSWORD="${BASH_REMATCH[2]}"
+HEROKU_PG_HOST="${BASH_REMATCH[3]}"
+HEROKU_PG_DB="${BASH_REMATCH[4]}"
+
+cat "conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/${HEROKU_PG_HOST}/g" \
+	-e "s/__HEROKU_PG_DB__/${HEROKU_PG_DB}/g" \
+	-e "s/__HEROKU_PG_USER__/${HEROKU_PG_USER}/g" \
+	-e "s/__HEROKU_PG_PASSWORD__/${HEROKU_PG_PASSWORD}/g" > www/app/config/parameters.ini
+
+#cp conf/parameters.ini www/app/config/parameters.ini
 #cp conf/config_parameters.ini www/app/config/config_parameters.ini
 
 ###TODO### Fix issue with bin/vendor install script
