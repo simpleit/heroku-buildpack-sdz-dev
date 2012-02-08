@@ -221,6 +221,7 @@ cp conf/config_parameters.ini www/app/config/config_parameters.ini
 echo "---------> Install Sf2 assets"
 ###FIXME### Change 'dev' environement to 'prod'
 export LD_LIBRARY_PATH=${BUILD_DIR}/${PHP_PATH}/icu/lib
+export PATH=${BUILD_DIR}/${NODE_PATH}/bin:${BUILD_DIR}/node_modules/.bin:$PATH
 ${PHP_PATH}/bin/php www/app/console assets:install www/web --env=dev
 ${PHP_PATH}/bin/php www/app/console assetic:dump --no-debug --env=dev
 
