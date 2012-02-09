@@ -218,15 +218,12 @@ echo "-----> Installing Sf2 application"
 
 echo "---------> Moving app conf files to Sf2 configuration directory"
 
-cp conf/parameters.ini www/app/config/parameters.ini
-#cp conf/config_parameters.ini www/app/config/config_parameters.ini
 
+echo "---------> Install Sf2 assets"
 ###TODO### Fix issue with bin/vendor install script
 #echo "---------> Install Sf2 vendors"
 #${PHP_PATH}/bin/php www/bin/vendors install
 #find www/vendor -name .git -type d | xargs rm -rf
-
-echo "---------> Install Sf2 assets"
 ###FIXME### Change 'dev' environement to 'prod'
 
 HEROKU_APP_PATH_STRIPPED=$(strip_slashes ${BUILD_DIR})
@@ -241,6 +238,11 @@ ${PHP_PATH}/bin/php www/app/console assetic:dump --no-debug --env=dev
 HEROKU_APP_PATH_STRIPPED=$(strip_slashes "/app")
 HEROKU_NODE_PATH_STRIPPED=$(strip_slashes ${NODE_PATH})
 cat "conf/config_parameters.ini" | sed -e "s/{__HEROKU__APP_PATH__}/${HEROKU_APP_PATH_STRIPPED}/g" -e "s/{__HEROKU_NODE_PATH__}/${HEROKU_NODE_PATH_STRIPPED}/" > www/app/config/config_parameters.ini
+
+###TODO### Fix issue with bin/vendor install script
+#echo "---------> Install Sf2 vendors"
+#${PHP_PATH}/bin/php www/bin/vendors install
+#find www/vendor -name .git -type d | xargs rm -rf
 
 # ----BOOT SCRIPT----------------------------------------------------------
 
