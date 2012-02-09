@@ -246,6 +246,12 @@ cat "conf/config_parameters.ini" | sed -e "s/{__HEROKU__APP_PATH__}/${HEROKU_APP
 
 echo "-----> Installing boot script"
 
+cat >>sf <<EOF
+#!/usr/bin/env bash
+/app/env.sh && /app/vendor/php/bin/php /app/www/app/console \$@
+EOF
+chmod +x sf
+
 cat >>env.sh <<EOF
 #!/usr/bin/env bash
 
@@ -264,10 +270,10 @@ cp /app/conf/php.ini /app/vendor/php/php.ini
 read HEROKU_PG_USER HEROKU_PG_PASSWORD HEROKU_PG_HOST HEROKU_PG_DB << HERE
     \$(echo "import re;pg_url = '\$DATABASE_URL';pattern = re.compile('postgres://([^:]+):([^@]+)@([^/]+)/(.+)');res = pattern.search(pg_url);pg_user = res.group(1);pg_passwd = res.group(2);pg_host = res.group(3);pg_db = res.group(4);print('{0} {1} {2} {3}'.format(pg_user, pg_passwd, pg_host, pg_db))" | python)
 HERE
-echo "HEROKU_PG_USER=\$HEROKU_PG_USER"
-echo "HEROKU_PG_PASSWORD=\$HEROKU_PG_PASSWORD"
-echo "HEROKU_PG_HOST=\$HEROKU_PG_HOST"
-echo "HEROKU_PG_DB=\$HEROKU_PG_DB"
+#echo "HEROKU_PG_USER=\$HEROKU_PG_USER"
+#echo "HEROKU_PG_PASSWORD=\$HEROKU_PG_PASSWORD"
+#echo "HEROKU_PG_HOST=\$HEROKU_PG_HOST"
+#echo "HEROKU_PG_DB=\$HEROKU_PG_DB"
 
 cat "/app/conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/\${HEROKU_PG_HOST}/g" \
 	-e "s/__HEROKU_PG_DB__/\${HEROKU_PG_DB}/g" \
