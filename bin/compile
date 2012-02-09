@@ -84,6 +84,9 @@ mkdir -p $BUILD_DIR $CACHE_DIR
 
 cd $BUILD_DIR
 
+env
+exit 1
+
 echo "-----> Move application files into 'www' folder"
 mkdir -p $CACHE_DIR/www
 mv * $CACHE_DIR/www
