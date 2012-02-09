@@ -214,7 +214,7 @@ cd $BUILD_DIR
 echo "-----> Installing Sf2 application"
 
 echo "---------> Moving app conf files to Sf2 configuration directory"
-HEROKU_PG_URI=$HEROKU_SHARED_POSTGRESQL_MAROON_URL
+HEROKU_PG_URI=$DATABASE_URL
 echo "HEROKU_PG_URI=$HEROKU_PG_URI"
 
 [[ $HEROKU_PG_URI =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
