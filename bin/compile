@@ -217,24 +217,6 @@ cd $BUILD_DIR
 echo "-----> Installing Sf2 application"
 
 echo "---------> Moving app conf files to Sf2 configuration directory"
-#HEROKU_PG_URI=$DATABASE_URL
-#echo "HEROKU_PG_URI=$HEROKU_PG_URI"
-
-#[[ $HEROKU_PG_URI =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
-#HEROKU_PG_USER="${BASH_REMATCH[1]}"
-#HEROKU_PG_PASSWORD="${BASH_REMATCH[2]}"
-#HEROKU_PG_HOST="${BASH_REMATCH[3]}"
-#HEROKU_PG_DB="${BASH_REMATCH[4]}"
-
-#echo "HEROKU_PG_USER=$HEROKU_PG_USER"
-#echo "HEROKU_PG_PASSWORD=$HEROKU_PG_PASSWORD"
-#echo "HEROKU_PG_HOST=$HEROKU_PG_HOST"
-#echo "HEROKU_PG_DB=$HEROKU_PG_DB"
-
-#cat "conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/${HEROKU_PG_HOST}/g" \
-#	-e "s/__HEROKU_PG_DB__/${HEROKU_PG_DB}/g" \
-#	-e "s/__HEROKU_PG_USER__/${HEROKU_PG_USER}/g" \
-#	-e "s/__HEROKU_PG_PASSWORD__/${HEROKU_PG_PASSWORD}/g" > www/app/config/parameters.ini
 
 cp conf/parameters.ini www/app/config/parameters.ini
 #cp conf/config_parameters.ini www/app/config/config_parameters.ini
@@ -274,7 +256,21 @@ echo "---- SdZ Heroku boot Script ----"
 echo "---- Prepare PHP env----"
 export LD_LIBRARY_PATH=/app/vendor/php/icu/lib
 
-#echo "--> Copy parameters.ini file into Sf2 app config folder"
+echo "--> Copy parameters.ini file into Sf2 app config folder"
+[[ \$DATABASE_URL =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
+HEROKU_PG_USER="\${BASH_REMATCH[1]}"
+HEROKU_PG_PASSWORD="\${BASH_REMATCH[2]}"
+HEROKU_PG_HOST="\${BASH_REMATCH[3]}"
+HEROKU_PG_DB="\${BASH_REMATCH[4]}"
+#echo "HEROKU_PG_USER=\$HEROKU_PG_USER"
+#echo "HEROKU_PG_PASSWORD=\$HEROKU_PG_PASSWORD"
+#echo "HEROKU_PG_HOST=\$HEROKU_PG_HOST"
+#echo "HEROKU_PG_DB=\$HEROKU_PG_DB"
+
+cat "/app/conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/\${HEROKU_PG_HOST}/g" \
+	-e "s/__HEROKU_PG_DB__/\${HEROKU_PG_DB}/g" \
+	-e "s/__HEROKU_PG_USER__/\${HEROKU_PG_USER}/g" \
+	-e "s/__HEROKU_PG_PASSWORD__/\${HEROKU_PG_PASSWORD}/g" > /app/www/app/config/parameters.ini
 #cp /app/conf/parameters.ini /app/www/app/config/parameters.ini
 
 echo "--> Copy PHP & Nginx conf files into vendors directory"
