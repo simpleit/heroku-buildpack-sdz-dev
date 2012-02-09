@@ -257,6 +257,7 @@ echo "---- Prepare PHP env----"
 export LD_LIBRARY_PATH=/app/vendor/php/icu/lib
 
 echo "--> Copy parameters.ini file into Sf2 app config folder"
+echo "DATABASE_URL: \$DATABASE_URL"
 [[ \$DATABASE_URL =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
 HEROKU_PG_USER="\${BASH_REMATCH[1]}"
 HEROKU_PG_PASSWORD="\${BASH_REMATCH[2]}"
