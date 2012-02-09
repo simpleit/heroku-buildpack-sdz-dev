@@ -257,16 +257,21 @@ echo "---- Prepare PHP env----"
 export LD_LIBRARY_PATH=/app/vendor/php/icu/lib
 
 echo "--> Copy parameters.ini file into Sf2 app config folder"
-echo "DATABASE_URL: \$DATABASE_URL"
-[[ \$DATABASE_URL =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
-HEROKU_PG_USER="\${BASH_REMATCH[1]}"
-HEROKU_PG_PASSWORD="\${BASH_REMATCH[2]}"
-HEROKU_PG_HOST="\${BASH_REMATCH[3]}"
-HEROKU_PG_DB="\${BASH_REMATCH[4]}"
-#echo "HEROKU_PG_USER=\$HEROKU_PG_USER"
-#echo "HEROKU_PG_PASSWORD=\$HEROKU_PG_PASSWORD"
-#echo "HEROKU_PG_HOST=\$HEROKU_PG_HOST"
-#echo "HEROKU_PG_DB=\$HEROKU_PG_DB"
+
+#echo "DATABASE_URL: \$DATABASE_URL"
+#[[ \$DATABASE_URL =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
+#HEROKU_PG_USER="\${BASH_REMATCH[1]}"
+#HEROKU_PG_PASSWORD="\${BASH_REMATCH[2]}"
+#HEROKU_PG_HOST="\${BASH_REMATCH[3]}"
+#HEROKU_PG_DB="\${BASH_REMATCH[4]}"
+
+read HEROKU_PG_USER HEROKU_PG_PASSWORD HEROKU_PG_HOST HEROKU_PG_DB << HERE
+    $(echo "import re;pg_url = $DATABASE_URL;pattern = re.compile('postgres://([^:]+):([^@]+)@([^/]+)/(.+)');res = pattern.search(pg_url);pg_user = res.group(1);pg_passwd = res.group(2);pg_host = res.group(3);pg_db = res.group(4);print('{0} {1} {2} {3}'.format(pg_user, pg_passwd, pg_host, pg_db))" | python)
+HERE
+echo "HEROKU_PG_USER=\$HEROKU_PG_USER"
+echo "HEROKU_PG_PASSWORD=\$HEROKU_PG_PASSWORD"
+echo "HEROKU_PG_HOST=\$HEROKU_PG_HOST"
+echo "HEROKU_PG_DB=\$HEROKU_PG_DB"
 
 cat "/app/conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/\${HEROKU_PG_HOST}/g" \
 	-e "s/__HEROKU_PG_DB__/\${HEROKU_PG_DB}/g" \
