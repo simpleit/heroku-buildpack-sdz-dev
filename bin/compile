@@ -84,8 +84,8 @@ mkdir -p $BUILD_DIR $CACHE_DIR
 
 cd $BUILD_DIR
 
-env
-exit 1
+#env
+#exit 1
 
 echo "-----> Move application files into 'www' folder"
 mkdir -p $CACHE_DIR/www
@@ -217,26 +217,26 @@ cd $BUILD_DIR
 echo "-----> Installing Sf2 application"
 
 echo "---------> Moving app conf files to Sf2 configuration directory"
-HEROKU_PG_URI=$DATABASE_URL
-echo "HEROKU_PG_URI=$HEROKU_PG_URI"
+#HEROKU_PG_URI=$DATABASE_URL
+#echo "HEROKU_PG_URI=$HEROKU_PG_URI"
 
-[[ $HEROKU_PG_URI =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
-HEROKU_PG_USER="${BASH_REMATCH[1]}"
-HEROKU_PG_PASSWORD="${BASH_REMATCH[2]}"
-HEROKU_PG_HOST="${BASH_REMATCH[3]}"
-HEROKU_PG_DB="${BASH_REMATCH[4]}"
+#[[ $HEROKU_PG_URI =~ postgres://([^:]+):([^@]+)@([^/]+)/(.+) ]]
+#HEROKU_PG_USER="${BASH_REMATCH[1]}"
+#HEROKU_PG_PASSWORD="${BASH_REMATCH[2]}"
+#HEROKU_PG_HOST="${BASH_REMATCH[3]}"
+#HEROKU_PG_DB="${BASH_REMATCH[4]}"
 
-echo "HEROKU_PG_USER=$HEROKU_PG_USER"
-echo "HEROKU_PG_PASSWORD=$HEROKU_PG_PASSWORD"
-echo "HEROKU_PG_HOST=$HEROKU_PG_HOST"
-echo "HEROKU_PG_DB=$HEROKU_PG_DB"
+#echo "HEROKU_PG_USER=$HEROKU_PG_USER"
+#echo "HEROKU_PG_PASSWORD=$HEROKU_PG_PASSWORD"
+#echo "HEROKU_PG_HOST=$HEROKU_PG_HOST"
+#echo "HEROKU_PG_DB=$HEROKU_PG_DB"
 
-cat "conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/${HEROKU_PG_HOST}/g" \
-	-e "s/__HEROKU_PG_DB__/${HEROKU_PG_DB}/g" \
-	-e "s/__HEROKU_PG_USER__/${HEROKU_PG_USER}/g" \
-	-e "s/__HEROKU_PG_PASSWORD__/${HEROKU_PG_PASSWORD}/g" > www/app/config/parameters.ini
+#cat "conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/${HEROKU_PG_HOST}/g" \
+#	-e "s/__HEROKU_PG_DB__/${HEROKU_PG_DB}/g" \
+#	-e "s/__HEROKU_PG_USER__/${HEROKU_PG_USER}/g" \
+#	-e "s/__HEROKU_PG_PASSWORD__/${HEROKU_PG_PASSWORD}/g" > www/app/config/parameters.ini
 
-#cp conf/parameters.ini www/app/config/parameters.ini
+cp conf/parameters.ini www/app/config/parameters.ini
 #cp conf/config_parameters.ini www/app/config/config_parameters.ini
 
 ###TODO### Fix issue with bin/vendor install script
