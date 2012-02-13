@@ -223,7 +223,7 @@ echo "---------> Install Sf2 assets"
 ###TODO### Fix issue with bin/vendor install script
 #echo "---------> Install Sf2 vendors"
 #${PHP_PATH}/bin/php www/bin/vendors install
-#find www/vendor -name .git -type d | xargs rm -rf
+find www/vendor -name .git -type d | xargs rm -rf
 ###FIXME### Change 'dev' environement to 'prod'
 
 HEROKU_APP_PATH_STRIPPED=$(strip_slashes ${BUILD_DIR})
