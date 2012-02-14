@@ -235,6 +235,13 @@ HERE
 
 #cat "conf/config_parameters.ini" | sed -e "s/{__HEROKU__APP_PATH__}/${HEROKU_APP_PATH_STRIPPED}/g" -e "s/{__HEROKU_NODE_PATH__}/${HEROKU_NODE_PATH_STRIPPED}/" > www/app/config/config_parameters.ini
 
+echo "cat \"conf/parameters.ini\" | sed -e \"s/__HEROKU_PG_HOST__/${HEROKU_PG_HOST}/g\" \
+        -e \"s/__HEROKU_PG_DB__/${HEROKU_PG_DB}/g\" \
+        -e \"s/__HEROKU_PG_USER__/${HEROKU_PG_USER}/g\" \
+        -e \"s/__HEROKU_PG_PASSWORD__/${HEROKU_PG_PASSWORD}/g\" \
+        -e \"s/__HEROKU_APP_PATH__/${HEROKU_APP_PATH_STRIPPED}/g\" \
+        -e \"s/__HEROKU_NODE_PATH__/${HEROKU_NODE_PATH_STRIPPED}/g\" > www/app/config/parameters.ini"
+
 cat "conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/${HEROKU_PG_HOST}/g" \
         -e "s/__HEROKU_PG_DB__/${HEROKU_PG_DB}/g" \
         -e "s/__HEROKU_PG_USER__/${HEROKU_PG_USER}/g" \
