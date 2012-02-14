@@ -266,7 +266,7 @@ cat >>env.sh <<EOF
 #!/usr/bin/env bash
 
 function strip_slashes() {
-  echo \$(echo "\$1" | sed -e "s/\//\\\\\//g")
+  echo \$(echo "\$1" | sed -e "s/\//\\\\\\\\\//g")
 }
 
 
