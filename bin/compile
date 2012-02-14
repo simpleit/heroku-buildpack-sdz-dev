@@ -269,6 +269,11 @@ chmod +x sf
 cat >>env.sh <<EOF
 #!/usr/bin/env bash
 
+function strip_slashes() {
+  echo \$(echo "\$1" | sed -e "s/\//\\\\\//g")
+}
+
+
 export PATH=/app/vendor/node/bin:/app/node_modules/.bin:/app/vendor/nginx/sbin:/app/vendor/php/bin:/app/vendor/php/sbin:/usr/local/bin:/usr/bin:/bin:\$PATH
 
 export LD_LIBRARY_PATH=/app/vendor/php/icu/lib
@@ -288,6 +293,9 @@ HERE
 #echo "HEROKU_PG_PASSWORD=\$HEROKU_PG_PASSWORD"
 #echo "HEROKU_PG_HOST=\$HEROKU_PG_HOST"
 #echo "HEROKU_PG_DB=\$HEROKU_PG_DB"
+
+HEROKU_APP_PATH_STRIPPED=\$(strip_slashes "/app")
+HEROKU_NODE_PATH_STRIPPED=\$(strip_slashes "$NODE_PATH")
 
 cat "/app/conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/\${HEROKU_PG_HOST}/g" \
 	-e "s/__HEROKU_PG_DB__/\${HEROKU_PG_DB}/g" \
