@@ -235,7 +235,7 @@ HEROKU_NODE_PATH_STRIPPED=$(strip_slashes "${NODE_PATH}")
 
 #cat "conf/config_parameters.ini" | sed -e "s/{__HEROKU__APP_PATH__}/${HEROKU_APP_PATH_STRIPPED}/g" -e "s/{__HEROKU_NODE_PATH__}/${HEROKU_NODE_PATH_STRIPPED}/" > www/app/config/config_parameters.ini
 
-cat "conf/parameters.ini" | -e "s/__HEROKU_APP_PATH__/${HEROKU_APP_PATH_STRIPPED}/g" \
+cat "conf/parameters.ini" | sed -e "s/__HEROKU_APP_PATH__/${HEROKU_APP_PATH_STRIPPED}/g" \
         -e "s/__HEROKU_NODE_PATH__/${HEROKU_NODE_PATH_STRIPPED}/g" > www/app/config/parameters.ini
 
 export LD_LIBRARY_PATH=${BUILD_DIR}/${PHP_PATH}/icu/lib
