@@ -230,7 +230,7 @@ HEROKU_APP_PATH_STRIPPED=$(strip_slashes "${BUILD_DIR}")
 HEROKU_NODE_PATH_STRIPPED=$(strip_slashes "${NODE_PATH}")
 
 read HEROKU_PG_USER HEROKU_PG_PASSWORD HEROKU_PG_HOST HEROKU_PG_DB << HERE
-    \$(echo "import re;pg_url = '\$DATABASE_URL';pattern = re.compile('postgres://([^:]+):([^@]+)@([^/]+)/(.+)');res = pattern.search(pg_url);pg_user = res.group(1);pg_passwd = res.group(2);pg_host = res.group(3);pg_db = res.group(4);print('{0} {1} {2} {3}'.format(pg_user, pg_passwd, pg_host, pg_db))" | python)
+    $(echo "import re;pg_url = '$DATABASE_URL';pattern = re.compile('postgres://([^:]+):([^@]+)@([^/]+)/(.+)');res = pattern.search(pg_url);pg_user = res.group(1);pg_passwd = res.group(2);pg_host = res.group(3);pg_db = res.group(4);print('{0} {1} {2} {3}'.format(pg_user, pg_passwd, pg_host, pg_db))" | python)
 HERE
 
 #cat "conf/config_parameters.ini" | sed -e "s/{__HEROKU__APP_PATH__}/${HEROKU_APP_PATH_STRIPPED}/g" -e "s/{__HEROKU_NODE_PATH__}/${HEROKU_NODE_PATH_STRIPPED}/" > www/app/config/config_parameters.ini
