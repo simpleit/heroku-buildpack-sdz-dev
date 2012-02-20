@@ -11,6 +11,7 @@
 # bin/compile <build-dir> <cache-dir>
 
 export SF_ENF="dev"
+echo "Sf env: ${SF_ENV}"
 
 
 # ----START CONFIG-----------------------------------------------------
@@ -96,7 +97,9 @@ mv $CACHE_DIR/www .
 
 # keep conf folder
 if [ -d www/app/heroku ]; then
+    echo "Dossier heroku!"
     if [ -d www/app/heroku/${SF_ENV}/conf ]; then
+        echo "Dossier env trouve:  www/app/heroku/${SF_ENV}/conf"
         cp www/app/heroku/${SF_ENV}/conf .
     fi
     rm -rf www/app/heroku
