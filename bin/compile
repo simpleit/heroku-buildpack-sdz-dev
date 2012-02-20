@@ -10,6 +10,8 @@
 
 # bin/compile <build-dir> <cache-dir>
 
+export SF_ENF="dev"
+
 
 # ----START CONFIG-----------------------------------------------------
 
@@ -93,8 +95,11 @@ mv * $CACHE_DIR/www
 mv $CACHE_DIR/www .
 
 # keep conf folder
-if [ -d www/conf ]; then
-  mv www/conf .
+if [ -d www/app/heroku ]; then
+    if [ -d www/app/heroku/${SF_ENV}/conf ]; then
+        cp www/app/heroku/${SF_ENV}/conf .
+    fi
+    rm -rf www/app/heroku
 fi
 
 # keep Node.js dependency file
@@ -240,8 +245,14 @@ cat "conf/parameters.ini" | sed -e "s/__HEROKU_APP_PATH__/${HEROKU_APP_PATH_STRI
 
 export LD_LIBRARY_PATH=${BUILD_DIR}/${PHP_PATH}/icu/lib
 export PATH=${BUILD_DIR}/${NODE_PATH}/bin:${BUILD_DIR}/node_modules/.bin:$PATH
-${PHP_PATH}/bin/php www/app/console assets:install www/web --env=dev
-${PHP_PATH}/bin/php www/app/console assetic:dump --no-debug --env=dev
+
+SF_DEBUG="--no-debug"
+if [ "$SF_ENV" != "prod" ]; then
+    SF_DEBUG=""
+fi
+
+${PHP_PATH}/bin/php www/app/console assets:install www/web --env=${SF_ENV}
+${PHP_PATH}/bin/php www/app/console assetic:dump ${SF_DEBUG} --env=${SF_ENV}
 
 #HEROKU_APP_PATH_STRIPPED=$(strip_slashes "/app")
 #HEROKU_NODE_PATH_STRIPPED=$(strip_slashes ${NODE_PATH})
