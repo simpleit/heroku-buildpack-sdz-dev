@@ -273,8 +273,8 @@ if [ "$SF_ENV" != "prod" ]; then
 fi
 
 # Deploying assets
-${PHP_PATH}/bin/php www/app/console assets:install www/web --env=${SF_ENV}
-${PHP_PATH}/bin/php www/app/console assetic:dump ${SF_DEBUG} --env=${SF_ENV}
+${PHP_PATH}/bin/php --php-ini $PHP_PATH/php.ini www/app/console assets:install www/web --env=${SF_ENV}
+${PHP_PATH}/bin/php --php-ini $PHP_PATH/php.ini www/app/console assetic:dump ${SF_DEBUG} --env=${SF_ENV}
 
 # ----BOOT SCRIPT----------------------------------------------------------
 
