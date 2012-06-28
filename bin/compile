@@ -257,7 +257,7 @@ echo "---------> Install Sf2 assets"
 HEROKU_APP_PATH_STRIPPED=$(strip_slashes "${BUILD_DIR}")
 HEROKU_NODE_PATH_STRIPPED=$(strip_slashes "${NODE_PATH}")
 
-date +%s > app/compilation_time
+date +%s > compilation_time
 
 cat "conf/parameters.ini" | sed -e "s/__HEROKU_APP_PATH__/${HEROKU_APP_PATH_STRIPPED}/g" \
         -e "s/__HEROKU_NODE_PATH__/${HEROKU_NODE_PATH_STRIPPED}/g" > www/app/config/parameters.ini
