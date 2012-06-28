@@ -308,7 +308,7 @@ HERE
 
 HEROKU_APP_PATH_STRIPPED=\$(strip_slashes "/app")
 HEROKU_NODE_PATH_STRIPPED=\$(strip_slashes "$NODE_PATH")
-HEROKU_ASSETS_VERSION=`cat /app/compilation_time`
+HEROKU_ASSETS_VERSION=\`cat /app/compilation_time\`
 
 
 cat "/app/conf/parameters.ini" | sed -e "s/__HEROKU_PG_HOST__/\${HEROKU_PG_HOST}/g" \
